@@ -152,12 +152,12 @@ describe("Test TaskQueue removeTasks functionality", () => {
   it("should correctly remove tasks by group", () => {
     const toBeRemoveTaskGroup = customer1Tasks[0];
 
-    console.log(taskQueue.getQueueList());
+    // console.log(taskQueue.getQueueList());
 
     const queueSize = taskQueue.queueSize();
     const removedTaskCount = taskQueue.removeTasks(toBeRemoveTaskGroup);
 
-    console.log(taskQueue.getQueueList());
+    // console.log(taskQueue.getQueueList());
 
     expect(taskQueue.queueSize()).toBe(queueSize - removedTaskCount);
 
