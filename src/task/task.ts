@@ -1,10 +1,25 @@
 import { Customer } from "../customer";
-
+/**
+ * Class for processing task
+ */
 export class Task {
+  /**
+   * Unique task id
+   */
   private id: string;
+
+  /**
+   * Task group id.
+   */
   private groupId: string;
-  private customer: Customer; // TODO: just need email and text..
+
+  private customer: Customer;
+
+  /**
+   * Task relative time. Specifies how long after the first task processed.
+   */
   private relativeTime: number;
+
   constructor(customer: Customer, relativeTime: number) {
     this.relativeTime = relativeTime;
     this.customer = customer;
@@ -36,6 +51,9 @@ export class Task {
     return this.id === task.id;
   }
 
+  /**
+   * Creates bulk tasks from customers.
+   */
   static fromCustomers(...customers: Customer[]): Task[] {
     const tasks: Task[] = [];
     for (const customer of customers) {

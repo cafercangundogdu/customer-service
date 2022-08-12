@@ -1,4 +1,6 @@
-// Lookup table for schedule type
+/**
+ *  Lookup table for schedule type
+ */
 export const TimeFormatMap: { [key in string]: number } = {
   s: 1,
   //  m: 60,
@@ -7,6 +9,9 @@ export const TimeFormatMap: { [key in string]: number } = {
 
 export class TimeFormatError extends Error {}
 
+/**
+ * Customer is created for per csv row.
+ */
 export class Customer {
   email: string;
   text: string;
@@ -19,6 +24,9 @@ export class Customer {
     this.schedule = Customer.parseSchedule(schedule);
   }
 
+  /**
+   * Creates a Customer object from given row.
+   */
   static createCustomerFromRow(row: {
     // [key in keyof Customer]: string;
     [key in string]: string;
@@ -26,6 +34,9 @@ export class Customer {
     return new Customer(row.email, row.text, row.schedule);
   }
 
+  /**
+   * Parses the schedule part of csv row.
+   */
   static parseSchedule(schedule: string, deliminer: string = "-"): number[] {
     return schedule
       .split(deliminer)
