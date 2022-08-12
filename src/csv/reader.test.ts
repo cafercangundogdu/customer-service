@@ -2,7 +2,7 @@ import "dotenv-defaults/config";
 import fs from "fs";
 import { BufferedCharReader } from "./reader";
 
-const MockFilePath = "./test-resources/mock.file.txt";
+const MockFilePath = "./fixtures/mock.file.txt";
 
 describe("Test reader functionality", () => {
   it("should correct size", () => {
