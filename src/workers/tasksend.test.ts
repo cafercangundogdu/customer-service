@@ -2,6 +2,7 @@ import { Customer } from "../customer";
 import { HttpAPI, MessagePostData, PaymentResponse } from "../http";
 import { Task } from "../task/task";
 import { TaskQueue } from "../task/taskqueue";
+import { TaskType } from "./taskqueue";
 import { TaskSendWorker, TaskSendWorkerOutputMessageType } from "./tasksend";
 
 class MockHttpApi extends HttpAPI {
@@ -80,51 +81,31 @@ describe("Test Task Send worker", () => {
       taskSendWorker.on(
         "output",
         ({ data, type }: TaskSendWorkerOutputMessageType) => {
-          if (type === "task_remove") {
-            taskQueue.removeTasks(data as Task);
-          } else if (type === "time_ms") {
-            taskQueue.setTimeMs(data as number);
+          if (type === TaskType.TaskRemove) {
+            taskQueue.removeTasks(data);
+          } else if (type === TaskType.TimeMs) {
+            taskQueue.setTimeMs(data);
           } else {
             throw new Error("Test not implemented for this type!");
           }
         }
       );
 
-      /*
-      new Promise<void>((resolve, reject) => {
-        setInterval(() => {
-          if (taskQueue.queueSize() === 0) {
-            resolve();
-          }
-          const task = taskQueue.dequeue();
-          if (task) {
-            taskSendWorker.send({
-              task,
-              absoluteTimeMs: taskQueue.getTaskAbsoluteTimeMs(task),
-            });
-          }
-        }, 100);
-      });
-*/
       const workerPromise = taskSendWorker.run();
-
-      const sendPromise = new Promise<void>(async (resolve) => {
-        // we are ignoring tasks timing
-        const queueList = taskQueue.getQueueList();
-        for (const task of queueList) {
-          taskSendWorker.send({
-            task,
-            absoluteTimeMs: Date.now(),
-          });
-        }
-        resolve();
-      });
 
       setTimeout(() => {
         taskSendWorker.emit("stop");
       }, taskTimeoutMs);
 
-      await sendPromise;
+      // we are ignoring tasks timing
+      const queueList = taskQueue.getQueueList();
+      for (const task of queueList) {
+        taskSendWorker.send({
+          task,
+          absoluteTimeMs: Date.now(),
+        });
+      }
+
       await workerPromise;
     },
     taskTimeoutMs + 1000

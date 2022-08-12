@@ -1,7 +1,11 @@
 import "dotenv-defaults/config";
 import { Customer } from "../customer";
 import { Task } from "../task/task";
-import { TaskQueueWorker, TaskQueueWorkerOutputMessageType } from "./taskqueue";
+import {
+  TaskQueueWorker,
+  TaskQueueWorkerOutputMessageType,
+  TaskType,
+} from "./taskqueue";
 
 describe("Test Task Queue Worker", () => {
   it("should INTERVAL_TIME_MS set", () => {
@@ -31,7 +35,7 @@ describe("Test Task Queue Worker", () => {
 
       for (const task of tasks) {
         taskQueueWorker.send({
-          type: "task",
+          type: TaskType.Task,
           data: task,
         });
       }
@@ -81,13 +85,13 @@ describe("Test Task Queue Worker", () => {
 
       for (const task of tasks) {
         taskQueueWorker.send({
-          type: "task",
+          type: TaskType.Task,
           data: task,
         });
       }
 
       taskQueueWorker.send({
-        type: "task_remove",
+        type: TaskType.TaskRemove,
         data: tasks[0],
       });
 
@@ -118,7 +122,7 @@ describe("Test Task Queue Worker", () => {
 
       for (const task of tasks) {
         taskQueueWorker.send({
-          type: "task",
+          type: TaskType.Task,
           data: task,
         });
       }
@@ -126,7 +130,7 @@ describe("Test Task Queue Worker", () => {
       const expectDateMs = Date.now();
 
       taskQueueWorker.send({
-        type: "time_ms",
+        type: TaskType.TimeMs,
         data: expectDateMs,
       });
 
