@@ -33,20 +33,15 @@ export class CsvWorker extends Worker<
         }
 
         const parser = new CsvParser(csvFilePath);
-        parser.on("header", (header: string[]) => {
-          // console.log("header", header);
-        });
+
         parser.on("row", (row: { [key: string]: string }, rowIndex: number) => {
-          // console.log("row!", row);
           this.emit("output", {
             row,
             rowIndex,
           });
         });
-        parser.on("end", () => {
-          resolve();
-        });
-        parser.parse();
+
+        await parser.parse();
       } catch (e) {
         reject(e);
       }
