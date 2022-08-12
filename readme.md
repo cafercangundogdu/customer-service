@@ -24,3 +24,5 @@ npm run start:dev # Start the project with development mode
 ```bash
 npm run start # Start the project with production mode
 ```
+
+Note: Using "dotenv-defaults" package for parsing envitonment file.
