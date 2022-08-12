@@ -1,7 +1,5 @@
 import { Task } from "./task";
 
-// TODO: implement sorted array??
-
 export class TaskQueue {
   /**
    *  sorted Task array
@@ -54,7 +52,6 @@ export class TaskQueue {
     }
   }
 
-  // TODO: should check unique?
   /**
    * Adds tasks to the queue in order and returns its index.
    * if the task is already added, return its index.

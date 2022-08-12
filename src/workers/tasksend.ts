@@ -74,12 +74,6 @@ export class TaskSendWorker extends Worker<
             message.absoluteTimeMs,
             this.httpApi,
             () => {
-              // TODO: remove debug
-              /*
-              if (firstSendTimeMs) {
-                console.log(Date.now() - firstSendTimeMs);
-              }
-              */
               if (!firstSendTimeMs) {
                 /**
                  * if its first task, set sent time

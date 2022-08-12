@@ -11,7 +11,6 @@ class MockHttpApi extends HttpAPI {
     endPointReturnType: PaymentResponse,
     mockOnSocketOpen: () => void
   ) {
-    // TODO: create a map for other endpoints?
     super();
     this.mockReturnData = endPointReturnType;
     this.mockOnSocketOpen = mockOnSocketOpen;
