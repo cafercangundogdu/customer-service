@@ -33,7 +33,7 @@ describe("Test reader functionality", () => {
 
   it("should read content correctly", async () => {
     const charReader = new BufferedCharReader(MockFilePath, 512);
-    const content = "Hello World!";
+    const content = "Hello World!ü$€?ç";
     while (!charReader.isEnd()) {
       const char = await charReader.readChar();
       expect(char).toBe(content[charReader.getReadedCharCount() - 1]);
@@ -59,13 +59,28 @@ describe("Test reader functionality", () => {
 
   it("should correctly skip to next char", async () => {
     const charReader = new BufferedCharReader(MockFilePath, 512);
-    const content = "HloWrd";
+    const content = "HloWrdü€ç";
     let readed = "";
     while (!charReader.isEnd()) {
       readed += await charReader.readChar();
       if (charReader.getReadedCharCount() % 1 === 0) {
         charReader.skipNext();
       }
+    }
+    expect(readed).toBe(content);
+    charReader.close();
+  });
+
+  it("should correctly read content with overflowed char", async () => {
+    /**
+     * mock file content is `Hello World!ü$€?ç` with buffersize 15
+     * so should overflow € char, but should read correcly content
+     */
+    const charReader = new BufferedCharReader(MockFilePath, 15);
+    const content = "Hello World!ü$€?ç";
+    let readed = "";
+    while (!charReader.isEnd()) {
+      readed += await charReader.readChar();
     }
     expect(readed).toBe(content);
     charReader.close();
