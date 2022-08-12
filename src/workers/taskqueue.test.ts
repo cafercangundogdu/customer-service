@@ -60,4 +60,40 @@ describe("Test Task Queue Worker", () => {
     },
     taskTimeoutMs + 1000
   );
+
+  it(
+    "should correctly remove tasks",
+    async () => {
+      const customer = new Customer(
+        "vdaybell0@seattletimes.com",
+        "Hi Vincenty, your invoice about $1.99 is due.",
+        "0s-2s-4s"
+      );
+
+      const tasks = Task.fromCustomers(customer);
+
+      const workerPromise = taskQueueWorker.run();
+
+      setTimeout(() => {
+        taskQueueWorker.emit("stop");
+      }, taskTimeoutMs);
+
+      for (const task of tasks) {
+        taskQueueWorker.send({
+          type: "task",
+          data: task,
+        });
+      }
+
+      taskQueueWorker.send({
+        type: "task_remove",
+        data: tasks[0],
+      });
+
+      expect(taskQueueWorker.getTaskQueue().queueSize()).toBe(0);
+
+      await workerPromise;
+    },
+    taskTimeoutMs + 1000
+  );
 });
