@@ -6,7 +6,7 @@ import { TaskQueueWorker, TaskQueueWorkerOutputMessageType } from "./taskqueue";
 import { TaskSendWorker, TaskSendWorkerOutputMessageType } from "./tasksend";
 import { Worker, WorkerType } from "./worker";
 
-export class Primary extends Worker {
+export class PrimaryWorker extends Worker {
   workers: {
     // [key in Exclude<Partial<WorkerType>, WorkerType.PRIMARY>]: Worker;
     [WorkerType.CSV]: CsvWorker;
