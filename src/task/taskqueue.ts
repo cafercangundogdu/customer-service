@@ -141,6 +141,8 @@ export class TaskQueue {
   }
 
   /**
+   * Insertion Sort Algorithm
+   * time complexity : o(n^2)
    * Inserts the task to task queue in right order.
    * @param task
    * @returns task inserted index
