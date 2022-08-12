@@ -13,12 +13,12 @@ describe("Test Task Queue Worker", () => {
   });
 
   const toleranceTime = parseInt(process.env.TOLERANCE_TIME_MS as string);
-  const taskQueueWorker = new TaskQueueWorker();
 
   const taskTimeoutMs = 5000;
   it(
     "should correctly output timed tasks",
     async () => {
+      const taskQueueWorker = new TaskQueueWorker();
       const customer = new Customer(
         "vdaybell0@seattletimes.com",
         "Hi Vincenty, your invoice about $1.99 is due.",
@@ -64,6 +64,7 @@ describe("Test Task Queue Worker", () => {
   it(
     "should correctly remove tasks",
     async () => {
+      const taskQueueWorker = new TaskQueueWorker();
       const customer = new Customer(
         "vdaybell0@seattletimes.com",
         "Hi Vincenty, your invoice about $1.99 is due.",
@@ -91,6 +92,45 @@ describe("Test Task Queue Worker", () => {
       });
 
       expect(taskQueueWorker.getTaskQueue().queueSize()).toBe(0);
+
+      await workerPromise;
+    },
+    taskTimeoutMs + 1000
+  );
+
+  it(
+    "should correctly set base time",
+    async () => {
+      const taskQueueWorker = new TaskQueueWorker();
+      const customer = new Customer(
+        "vdaybell0@seattletimes.com",
+        "Hi Vincenty, your invoice about $1.99 is due.",
+        "0s-2s-4s"
+      );
+
+      const tasks = Task.fromCustomers(customer);
+
+      const workerPromise = taskQueueWorker.run();
+
+      setTimeout(() => {
+        taskQueueWorker.emit("stop");
+      }, taskTimeoutMs);
+
+      for (const task of tasks) {
+        taskQueueWorker.send({
+          type: "task",
+          data: task,
+        });
+      }
+
+      const expectDateMs = Date.now();
+
+      taskQueueWorker.send({
+        type: "time_ms",
+        data: expectDateMs,
+      });
+
+      expect(taskQueueWorker.getTaskQueue().getTimeMs()).toBe(expectDateMs);
 
       await workerPromise;
     },
