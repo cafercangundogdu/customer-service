@@ -32,7 +32,7 @@ interface CsvParserEvents {
 /**
  * CsvParser Interface
  */
-export declare interface CsvParser {
+export interface CsvParser {
   /**
    *
    * @param deliminer Csv column deliminer, defaults ','

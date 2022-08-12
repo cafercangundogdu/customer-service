@@ -37,7 +37,7 @@ interface WorkerEvents<
 /**
  * Worker Interface
  */
-export declare interface Worker<
+export interface Worker<
   I extends WorkerInputMessageType,
   O extends WorkerOutputMessageType
 > {
