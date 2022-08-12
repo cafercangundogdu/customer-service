@@ -33,7 +33,7 @@ export class Primary extends Worker {
         this.workers[WorkerType.CSV].on(
           "output",
           (message: CsvWorkerOutputMessageType) => {
-            console.log("row: ", message.row);
+            // console.log("row: ", message.row);
             const customer: Customer = Customer.createCustomerFromRow(
               message.row
             );

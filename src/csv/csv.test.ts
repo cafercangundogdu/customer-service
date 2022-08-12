@@ -10,16 +10,7 @@ describe("Test CSV_FILE_RELATIVE_PATH environment", () => {
 });
 
 describe("Test parse header correctly", () => {
-  /*
-  const csvFilePath = path.join(
-    __dirname,
-    "..",
-    "..",
-    process.env.CSV_FILE_RELATIVE_PATH as string
-  );
-  */
   const csvFilePath = process.env.CSV_FILE_RELATIVE_PATH;
-
   const csvParser = new CsvParser(csvFilePath as string);
 
   it("should emit header correctly", async () => {
@@ -41,16 +32,15 @@ describe("Test parse first row correctly", () => {
   let csvHeader: string[] = [];
   let csvRows: Row[] = [];
 
-  csvParser.parse();
   csvParser.on("header", (header: string[]) => {
     csvHeader.push(...header);
   });
 
   it("should emit first row correctly", async () => {
+    csvParser.parse();
     const row = await new Promise<Row>((resolve, reject) => {
       csvParser.on("row", (row: Row) => {
         resolve(row);
-        console.log("running haha...");
       });
     });
     csvParser.stop();
@@ -64,7 +54,7 @@ describe("Test parse first row correctly", () => {
     ]);
 
     csvRows.push(row);
-  });
+  }, 30000);
 });
 
 describe("Test all rows correctly", () => {
@@ -108,7 +98,7 @@ describe("Test all rows correctly", () => {
     });
 
     csvParser.on("row", (row: Row, rowIndex: number) => {
-      console.log("row", row);
+      // console.log("row", row);
       expect(Object.keys(row)).toEqual(csvHeader);
       expect(correctRows[rowIndex]).toStrictEqual(row);
     });
