@@ -6,14 +6,14 @@ export class Task {
   /**
    * Unique task id
    */
-  private id: string;
+  private readonly id: string;
 
   /**
    * Task group id.
    */
-  private groupId: string;
+  private readonly groupId: string;
 
-  private customer: Customer;
+  private readonly customer: Customer;
 
   /**
    * Task relative time. Specifies how long after the first task processed.
