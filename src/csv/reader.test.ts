@@ -2,18 +2,18 @@ import "dotenv-defaults/config";
 import fs from "fs";
 import { BufferedCharReader } from "./reader";
 
-const MockFilePath = "./fixtures/mock.file.txt";
+const FixtureFilePath = "./fixtures/fixture.txt";
 
 describe("Test reader functionality", () => {
   it("should correct size", () => {
-    const charReader = new BufferedCharReader(MockFilePath, 512);
-    const stats = fs.statSync(MockFilePath);
+    const charReader = new BufferedCharReader(FixtureFilePath, 512);
+    const stats = fs.statSync(FixtureFilePath);
     expect(charReader.totalSize).toEqual(stats.size);
     charReader.close();
   });
 
   it("should correct read char count", async () => {
-    const charReader = new BufferedCharReader(MockFilePath, 512);
+    const charReader = new BufferedCharReader(FixtureFilePath, 512);
 
     const toBeRead = 3;
     for (let i = 0; i < toBeRead; i++) {
@@ -32,7 +32,7 @@ describe("Test reader functionality", () => {
   });
 
   it("should read content correctly", async () => {
-    const charReader = new BufferedCharReader(MockFilePath, 512);
+    const charReader = new BufferedCharReader(FixtureFilePath, 512);
     const content = "Hello World!ü$€?ç";
     while (!charReader.isEnd()) {
       const char = await charReader.readChar();
@@ -48,7 +48,7 @@ describe("Test reader functionality", () => {
   });
 
   it("should null char when file end reach", async () => {
-    const charReader = new BufferedCharReader(MockFilePath, 512);
+    const charReader = new BufferedCharReader(FixtureFilePath, 512);
     while (!charReader.isEnd()) {
       await charReader.readChar();
     }
@@ -58,7 +58,7 @@ describe("Test reader functionality", () => {
   });
 
   it("should correctly skip to next char", async () => {
-    const charReader = new BufferedCharReader(MockFilePath, 512);
+    const charReader = new BufferedCharReader(FixtureFilePath, 512);
     const content = "HloWrdü€ç";
     let readed = "";
     while (!charReader.isEnd()) {
@@ -76,7 +76,7 @@ describe("Test reader functionality", () => {
      * mock file content is `Hello World!ü$€?ç` with buffersize 15
      * so should overflow € char, but should read correcly content
      */
-    const charReader = new BufferedCharReader(MockFilePath, 15);
+    const charReader = new BufferedCharReader(FixtureFilePath, 15);
     const content = "Hello World!ü$€?ç";
     let readed = "";
     while (!charReader.isEnd()) {
