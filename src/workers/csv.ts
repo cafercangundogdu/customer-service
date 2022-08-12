@@ -5,12 +5,12 @@ import {
   WorkerOutputMessageType,
 } from "./worker";
 
-export type CsvWorkerOutputMessageType = WorkerOutputMessageType & {
+export interface CsvWorkerOutputMessageType extends WorkerOutputMessageType {
   row: { [key: string]: string };
   rowIndex: number;
-};
+}
 
-export type CsvWorkerInputMessageType = WorkerInputMessageType & {};
+export interface CsvWorkerInputMessageType extends WorkerInputMessageType {}
 
 export class CsvWorker extends Worker<
   CsvWorkerInputMessageType,
@@ -42,6 +42,7 @@ export class CsvWorker extends Worker<
         });
 
         await parser.parse();
+        resolve();
       } catch (e) {
         reject(e);
       }

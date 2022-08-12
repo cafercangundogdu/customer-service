@@ -13,14 +13,14 @@ export enum WorkerType {
 /**
  * Base Worker output message type
  */
-export type WorkerOutputMessageType = {
+export interface WorkerOutputMessageType {
   // target: WorkerType;
-};
+}
 
 /**
  * Base Worker input message type
  */
-export type WorkerInputMessageType = {};
+export interface WorkerInputMessageType {}
 
 /**
  * Base Worker Event Interface

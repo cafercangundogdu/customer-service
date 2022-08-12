@@ -2,7 +2,11 @@ import { Customer } from "../customer";
 import { HttpAPI } from "../http";
 import { Task } from "../task/task";
 import { CsvWorker, CsvWorkerOutputMessageType } from "./csv";
-import { TaskQueueWorker, TaskQueueWorkerOutputMessageType } from "./taskqueue";
+import {
+  TaskQueueWorker,
+  TaskQueueWorkerOutputMessageType,
+  TaskType,
+} from "./taskqueue";
 import { TaskSendWorker, TaskSendWorkerOutputMessageType } from "./tasksend";
 import { Worker, WorkerType } from "./worker";
 
@@ -39,7 +43,7 @@ export class PrimaryWorker extends Worker {
             );
             customer.schedule.forEach((relativeTime) =>
               this.workers[WorkerType.TASK_QUEUE].send({
-                type: "task",
+                type: TaskType.Task,
                 data: new Task(customer, relativeTime),
               })
             );
@@ -56,7 +60,10 @@ export class PrimaryWorker extends Worker {
         this.workers[WorkerType.TASK_SEND].on(
           "output",
           (message: TaskSendWorkerOutputMessageType) => {
-            if (message.type === "task_remove" || message.type === "time_ms") {
+            if (
+              message.type === TaskType.TaskRemove ||
+              message.type === TaskType.TimeMs
+            ) {
               this.workers[WorkerType.TASK_QUEUE].send(message);
             }
           }

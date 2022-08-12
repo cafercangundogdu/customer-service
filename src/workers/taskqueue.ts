@@ -9,18 +9,43 @@ import {
 /**
  * TaskQueue Worker output message type
  */
-export type TaskQueueWorkerOutputMessageType = WorkerOutputMessageType & {
+export interface TaskQueueWorkerOutputMessageType
+  extends WorkerOutputMessageType {
   task: Task;
   absoluteTimeMs: number;
-};
+}
+
+export enum TaskType {
+  Task = "task",
+  TaskRemove = "task_remove",
+  TimeMs = "time_ms",
+}
+
+export interface TaskQueueWorkerInputMessageTaskType
+  extends WorkerInputMessageType {
+  type: TaskType.Task;
+  data: Task;
+}
+
+export interface TaskQueueWorkerInputMessageTaskRemoveType
+  extends WorkerInputMessageType {
+  type: TaskType.TaskRemove;
+  data: Task;
+}
+
+export interface TaskQueueWorkerInputMessageTimeMsType
+  extends WorkerInputMessageType {
+  type: TaskType.TimeMs;
+  data: number;
+}
 
 /**
  * TaskQueue Worker input message type
  */
-export type TaskQueueWorkerInputMessageType = WorkerInputMessageType & {
-  type: "task" | "task_remove" | "time_ms";
-  data: Task | number;
-};
+export type TaskQueueWorkerInputMessageType =
+  | TaskQueueWorkerInputMessageTaskType
+  | TaskQueueWorkerInputMessageTaskRemoveType
+  | TaskQueueWorkerInputMessageTimeMsType;
 
 /**
  * TaskQueue Worker
@@ -61,14 +86,14 @@ export class TaskQueueWorker extends Worker<
 
         this.on("input", (message: TaskQueueWorkerInputMessageType) => {
           switch (message.type) {
-            case "task":
-              this.taskQueue.queue(message.data as Task);
+            case TaskType.Task:
+              this.taskQueue.queue(message.data);
               break;
-            case "time_ms":
-              this.taskQueue.setTimeMs(message.data as number);
+            case TaskType.TimeMs:
+              this.taskQueue.setTimeMs(message.data);
               break;
-            case "task_remove":
-              this.taskQueue.removeTasks(message.data as Task);
+            case TaskType.TaskRemove:
+              this.taskQueue.removeTasks(message.data);
               break;
             default:
               break;

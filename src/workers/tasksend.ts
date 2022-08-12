@@ -1,26 +1,34 @@
 import { PaymentResponse, HttpAPI } from "../http";
 import { Task } from "../task/task";
+import { TaskType } from "./taskqueue";
 import {
   Worker,
   WorkerInputMessageType,
   WorkerOutputMessageType,
 } from "./worker";
 
+export interface TaskRemoveType extends WorkerOutputMessageType {
+  type: TaskType.TaskRemove;
+  data: Task;
+}
+
+export interface TaskTimeMsType extends WorkerOutputMessageType {
+  type: TaskType.TimeMs;
+  data: number;
+}
+
 /**
  * TaskSend Worker output message type
  */
-export type TaskSendWorkerOutputMessageType = WorkerOutputMessageType & {
-  type: "task_remove" | "time_ms";
-  data: Task | number;
-};
+export type TaskSendWorkerOutputMessageType = TaskRemoveType | TaskTimeMsType;
 
 /**
  * TaskSend Worker input message type
  */
-export type TaskSendWorkerInputMessageType = WorkerInputMessageType & {
+export interface TaskSendWorkerInputMessageType extends WorkerInputMessageType {
   task: Task;
   absoluteTimeMs: number;
-};
+}
 
 /**
  * TaskSend Worker
@@ -84,7 +92,7 @@ export class TaskSendWorker extends Worker<
                  * emit output event for handle first task proceed time.
                  */
                 this.emit("output", {
-                  type: "time_ms",
+                  type: TaskType.TimeMs,
                   data: firstSendTimeMs,
                 });
               }
@@ -95,7 +103,7 @@ export class TaskSendWorker extends Worker<
                * customer task is done, so we broadcast the event to remove other same groupped tasks
                */
               this.emit("output", {
-                type: "task_remove",
+                type: TaskType.TaskRemove,
                 data: message.task,
               });
             }
