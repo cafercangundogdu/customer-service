@@ -6,20 +6,35 @@ import {
   WorkerOutputMessageType,
 } from "./worker";
 
+/**
+ * TaskQueue Worker output message type
+ */
 export type TaskQueueWorkerOutputMessageType = WorkerOutputMessageType & {
   task: Task;
   absoluteTimeMs: number;
 };
 
+/**
+ * TaskQueue Worker input message type
+ */
 export type TaskQueueWorkerInputMessageType = WorkerInputMessageType & {
   type: "task" | "task_remove" | "time_ms";
   data: Task | number;
 };
 
+/**
+ * TaskQueue Worker
+ * Receiving a `Task` object with input event,
+ * puts the given task to task queue,
+ * emits `output` event with `Task` object when task-timing hit on a Task
+ */
 export class TaskQueueWorker extends Worker<
   TaskQueueWorkerInputMessageType,
   TaskQueueWorkerOutputMessageType
 > {
+  /**
+   * Queue for Tasks
+   */
   private taskQueue: TaskQueue;
   constructor() {
     super();

@@ -3,9 +3,19 @@ import { Task } from "./task";
 // TODO: implement sorted array??
 
 export class TaskQueue {
-  // sorted Task array
+  /**
+   *  sorted Task array
+   */
   private taskQueue: Task[];
-  private baseTimeMs: number; // first message sent ms
+
+  /**
+   * State of first message sent ms
+   */
+  private baseTimeMs: number;
+
+  /**
+   * Dequeue tasks early with tolerance time
+   */
   private toleranceMs: number;
 
   constructor() {
@@ -20,7 +30,7 @@ export class TaskQueue {
   }
 
   /**
-   *
+   * Pick up top task if task-time is hit.
    */
   dequeue(): Task | undefined {
     /**
@@ -129,7 +139,7 @@ export class TaskQueue {
    * @see `Task.relativeTime`
    */
   getTaskAbsoluteTimeMs(task: Task): number {
-    console.log("calculated task time: relative: ", task.getRelativeTime());
+    // console.log("calculated task time: relative: ", task.getRelativeTime());
     return this.baseTimeMs + task.getRelativeTime() * 1000;
   }
 
