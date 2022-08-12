@@ -1,4 +1,5 @@
 // https://www.rfc-editor.org/rfc/rfc4180.html
+
 import { EventEmitter } from "stream";
 import { BufferedCharReader } from "./reader";
 
@@ -167,7 +168,7 @@ export class CsvParser extends EventEmitter {
               } else {
                 /**
                  * current quote char is point to end of column.
-                 * so rollback readed next char.
+                 * so rollback read.
                  */
                 reader.rollback();
 
