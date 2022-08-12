@@ -2,29 +2,41 @@
 import { EventEmitter } from "stream";
 import { BufferedCharReader } from "./reader";
 
-//export type Row = { [key in string]: string };
-// export type Row<T extends string = string> = { [key in T]: string };
 export type Row = Record<string, string>;
 
-interface CsvReaderEvents {
+/**
+ * Csv Reader Event Emitter interface
+ */
+interface CsvParserEvents {
+  /**
+   * Emitted when csv parse header
+   */
   header: (header: string[]) => void;
-  // row: (row: string[], rowIndex: number) => void;
+  /**
+   * Emitted when csv parse a row
+   */
   row: (row: { [key in string]: string }, rowIndex: number) => void;
+  /**
+   * Emitted when csv parse a column
+   */
   column: (column: string, columnIndex: number, rowIndex: number) => void;
+  /**
+   * Emitted when csv parser reach end of file
+   */
   end: () => void;
 }
 
 export declare interface CsvParser {
   parse(deliminer: string): Promise<void>;
 
-  emit<U extends keyof CsvReaderEvents>(
+  emit<U extends keyof CsvParserEvents>(
     event: U,
-    ...args: Parameters<CsvReaderEvents[U]>
+    ...args: Parameters<CsvParserEvents[U]>
   ): boolean;
 
-  on<U extends keyof CsvReaderEvents>(
+  on<U extends keyof CsvParserEvents>(
     event: U,
-    listener: CsvReaderEvents[U]
+    listener: CsvParserEvents[U]
   ): this;
 }
 
