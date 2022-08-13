@@ -5,6 +5,7 @@
 ```bash
 npm install # Install the project dependencies
 npm run build # Compile the project sources
+cp .env.defaults .env # Create .env file from .env.defaults
 ```
 
 ### Unit tests
